@@ -1,3 +1,8 @@
 import { combineReducers } from 'redux';
 import { customers } from './CustomerReducer'
-export default combineReducers({customers});
+import { reducer as reduxForm } from 'redux-form';
+
+export default combineReducers({
+    customers,
+    form: reduxForm
+});
