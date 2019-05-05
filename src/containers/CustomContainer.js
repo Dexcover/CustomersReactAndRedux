@@ -7,6 +7,7 @@ import {Route} from 'react-router-dom';
 import CustomerEdit from './../components/CustomerEdit';
 import CustomerData from '../components/CustomerData';
 import {fetchCustomers} from './../actions/FectchCustomerAction';
+import {updateCustomer} from './../actions/UpdateCustomerAction';
 
 class CustomContainer extends Component {
     componentDidMount() {
@@ -18,11 +19,15 @@ class CustomContainer extends Component {
     
     handleSubmit = values => {
         console.info(JSON.stringify(values));
+        const {id} = values;
+        return this.props.updateCustomer(id, values);
     }
 
     handleOnBack = () =>(
         this.props.history.goBack()
     );
+
+    handleOnSubmitSuccess = () => (this.props.history.goBack());
 
     renderBody = ()=>(
         <Route path="/customers/:dni/edit"
@@ -32,6 +37,7 @@ class CustomContainer extends Component {
                { const CustomerControl = match?CustomerEdit: CustomerData;
                 return <CustomerControl {...this.props.customer} 
                 onSubmit={this.handleSubmit}
+                onSubmitSuccess={this.handleOnSubmitSuccess}
                 onBack={this.handleOnBack}></CustomerControl>
             }
             return null;
@@ -52,14 +58,15 @@ class CustomContainer extends Component {
 
 CustomContainer.propTypes = {
     dni: PropTypes.string.isRequired,
-    customer: PropTypes.object.isRequired,
+    customer: PropTypes.object,
     fetchCustomer: PropTypes.func.isRequired,
+    updateCustomer: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, props) => ({
     customer: getCustomerByDni(state, props)
 });
 
-const mapDispatchToProps =  {fetchCustomers};
+const mapDispatchToProps =  {fetchCustomers, updateCustomer};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomContainer);

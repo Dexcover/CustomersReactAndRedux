@@ -1,4 +1,5 @@
 import React from 'react'
+import { Prompt } from 'react-router'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { reduxForm, Field } from 'redux-form'
@@ -35,7 +36,13 @@ const isNumber = value => (
   isNaN(Number(value)) && 'El campo debe ser un número'
 )
 
-const CustomerEdit = ({name, dni, age, handleSubmit, submmiting, onBack}) => {
+const toNumber = value => value && Number(value);
+
+const toUpper = value => value && value.toUpperCase();
+
+const onlyGrow = (value, previousValue, values) =>value && (!previousValue? value :(value>previousValue? value: previousValue));
+
+const CustomerEdit = ({name, dni, age, handleSubmit, submmiting, onBack, pristine, submitSucceeded}) => {
   return (
     <div>
       <h2>Edición del Cliente</h2>
@@ -45,7 +52,9 @@ const CustomerEdit = ({name, dni, age, handleSubmit, submmiting, onBack}) => {
           name='name'
           component={MiField}
           placeholder='Nombe'
-          label={"Nombre"}></Field>
+          label={"Nombre"}
+          parse={toUpper}
+          format={toUpper}></Field>
         <Field
           name='dni'
           component={MiField}
@@ -56,11 +65,15 @@ const CustomerEdit = ({name, dni, age, handleSubmit, submmiting, onBack}) => {
           name='age'
           component={MiField}
           placeholder='edad'
-          label={"edad"}></Field>
+          label={"edad"}
+          parse={toNumber}
+          normalize={onlyGrow}></Field>
           <CustomerActions>
-              <button type="submit" disabled={submmiting}>Enviar Formulario</button>
-              <button onClick={onBack}>Cancelar</button>
+              <button type="submit" disabled={pristine || submmiting}>Enviar Formulario</button>
+              <button type="button" onClick={onBack}>Cancelar</button>
           </CustomerActions>
+          <Prompt when={!pristine && !submitSucceeded}
+          message={"Se perderán los datos si continúa."}></Prompt>
       </form>
     </div>
   )
