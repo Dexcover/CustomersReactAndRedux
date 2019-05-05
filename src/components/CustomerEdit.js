@@ -35,7 +35,7 @@ const isNumber = value => (
   isNaN(Number(value)) && 'El campo debe ser un número'
 )
 
-const CustomerEdit = ({name, dni, age, handleSubmit, submmiting}) => {
+const CustomerEdit = ({name, dni, age, handleSubmit, submmiting, onBack}) => {
   return (
     <div>
       <h2>Edición del Cliente</h2>
@@ -59,6 +59,7 @@ const CustomerEdit = ({name, dni, age, handleSubmit, submmiting}) => {
           label={"edad"}></Field>
           <CustomerActions>
               <button type="submit" disabled={submmiting}>Enviar Formulario</button>
+              <button onClick={onBack}>Cancelar</button>
           </CustomerActions>
       </form>
     </div>
@@ -68,7 +69,8 @@ const CustomerEdit = ({name, dni, age, handleSubmit, submmiting}) => {
 CustomerEdit.propTypes = {
   dni: PropTypes.string,
   name: PropTypes.string,
-  age: PropTypes.string
+  age: PropTypes.number,
+  onBack: PropTypes.func.isRequired,
 }
 
 const CustomerEditForm = reduxForm({
